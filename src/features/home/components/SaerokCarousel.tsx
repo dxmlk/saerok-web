@@ -4,16 +4,43 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import SaerokCarouselCard from "./SaerokCarouselCard";
 import { scaledStyle } from "@/utils/scaleStyle";
+import { useCuratedCollections } from "@/hooks/useCuratedSaeroks";
+import SaerokCarouselCardSkeleton from "./SaerokCarouselCardSkeleton";
+import { ReactComponent as ArrowIcon } from "@/assets/icons/right-arrow.svg";
+import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 interface SaerokCarouselProps {
   scale?: number;
+  region?: string | null;
 }
 
-const SaerokCarousel = ({ scale = 1 }: SaerokCarouselProps) => {
+const REGION_TO_IDS: Record<string, number[]> = {
+  경기: [1273, 1523, 1525, 1055, 1265, 689],
+  경북: [1287, 754, 753, 752],
+  제주: [1527, 1532, 1542, 1544, 1546],
+  경남: [1535, 693, 454, 1281, 1206],
+  서울: [1103, 1274, 1261, 653, 488, 485],
+  충남: [1104, 489, 462, 103],
+};
+
+const DEFAULT_CURATED_IDS = [1273, 1523, 1525, 1055, 1265, 689];
+
+const SaerokCarousel = ({ scale = 1, region }: SaerokCarouselProps) => {
+  const navigate = useNavigate();
+
   const trackRef = useRef<HTMLDivElement | null>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
+
+  const curatedIds =
+    region && REGION_TO_IDS[region]
+      ? REGION_TO_IDS[region]
+      : DEFAULT_CURATED_IDS;
+
+  const { data, loading, error } = useCuratedCollections(curatedIds);
+
+  const dataSig = data?.map((d) => d.collectionId).join(",") || "";
 
   useGSAP(
     () => {
@@ -46,7 +73,7 @@ const SaerokCarousel = ({ scale = 1 }: SaerokCarouselProps) => {
         const maxTranslate = Math.max(0, totalW - containerW);
 
         // 초기 활성: 두 번째
-        const initialIndex = Math.min(1, slides.length - 1);
+        const initialIndex = 0;
         const clamp = (v: number, a: number, b: number) =>
           Math.max(a, Math.min(b, v));
         const alignX = (i: number) =>
@@ -54,7 +81,7 @@ const SaerokCarousel = ({ scale = 1 }: SaerokCarouselProps) => {
 
         const initialX = alignX(initialIndex);
 
-        // ✅ “마지막 카드 센터가 anchorX에 도달할 수 있는” 종료점으로 확장
+        //  “마지막 카드 센터가 anchorX에 도달할 수 있는” 종료점으로 확장
         const lastCenter = centers[centers.length - 1];
         const requiredEndX = Math.max(maxTranslate, lastCenter - anchorX);
         // (maxTranslate로는 부족할 수 있으니, 부족하면 더 멀리까지 이동 허용)
@@ -72,11 +99,12 @@ const SaerokCarousel = ({ scale = 1 }: SaerokCarouselProps) => {
           el.classList.toggle("is-active", i === initialIndex)
         );
         let active = initialIndex;
+        let initialized = false;
 
         // ===== 스크롤 길이(px) 동적 계산 =====
         // 가로 이동량(requiredEndX - initialX)에 비례해 세로 스크롤 길이 확보
-        const SCROLL_PER_PX = 1.1; // 느긋하게 이동(필요시 1.3~1.8로 올리세요)
-        const MIN_SCROLL = 900; // 최소 스크롤 길이(px)
+        const SCROLL_PER_PX = 0.8; // 느긋하게 이동(필요시 1.3~1.8로 올리세요)
+        const MIN_SCROLL = 800; // 최소 스크롤 길이(px)
         const scrollLenPx = Math.max(
           MIN_SCROLL,
           Math.ceil((requiredEndX - initialX) * SCROLL_PER_PX)
@@ -104,6 +132,10 @@ const SaerokCarousel = ({ scale = 1 }: SaerokCarouselProps) => {
                 ease: "power1.out",
               },
               onUpdate: () => {
+                if (!initialized) {
+                  initialized = true;
+                  return;
+                }
                 const tx = Number(gsap.getProperty(track, "x")) || 0; // 음수
                 const currentX = -tx; // 양수
 
@@ -164,8 +196,36 @@ const SaerokCarousel = ({ scale = 1 }: SaerokCarouselProps) => {
         tweenRef.current = null;
       };
     },
-    { scope: trackRef }
+    { scope: trackRef, dependencies: [region, dataSig] }
   );
+
+  if (loading) {
+    return (
+      <div
+        ref={trackRef}
+        className="slides-track w-full bg-background-white flex flex-row overflow-visible touch-pan-y overscroll-contain select-none gap-20"
+        style={scaledStyle(scale, {
+          height: 495,
+          paddingTop: 20,
+          paddingBottom: 20,
+        })}
+      >
+        <div
+          className="h-full shrink-0 m-0 p-0"
+          style={scaledStyle(scale, { width: 120 })}
+        />
+        {curatedIds.map((_, idx) => (
+          <SaerokCarouselCardSkeleton key={`skeleton-${idx}`} scale={scale} />
+        ))}
+        <div
+          className="h-full shrink-0 m-0 p-0 flex items-center justify-center"
+          style={scaledStyle(scale, { width: 120 })}
+        />
+      </div>
+    );
+  }
+  if (error) return <></>;
+  if (!data || data.length === 0) return <></>;
 
   return (
     <div
@@ -178,16 +238,19 @@ const SaerokCarousel = ({ scale = 1 }: SaerokCarouselProps) => {
       })}
     >
       <div
-        className="h-full shrink-0 m-0 p-0 slide"
+        className="h-full shrink-0 m-0 p-0"
         style={scaledStyle(scale, { width: 120 })}
       />
-      <SaerokCarouselCard scale={scale} />
-      <SaerokCarouselCard scale={scale} />
-      <SaerokCarouselCard scale={scale} />
-      <SaerokCarouselCard scale={scale} />
-      <SaerokCarouselCard scale={scale} />
-      <SaerokCarouselCard scale={scale} />
-      <SaerokCarouselCard scale={scale} />
+      {data.map((item) => (
+        <SaerokCarouselCard key={item.collectionId} scale={scale} item={item} />
+      ))}
+      <div
+        className="flex items-center justify-end cursor-pointer"
+        style={scaledStyle(scale, { width: 343, height: 455, marginLeft: 150 })}
+        onClick={() => navigate("/saerok")}
+      >
+        <ArrowIcon style={scaledStyle(scale, { width: 155, height: 155 })} />
+      </div>
     </div>
   );
 };

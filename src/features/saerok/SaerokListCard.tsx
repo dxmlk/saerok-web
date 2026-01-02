@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import type { CollectionItem } from "@/features/saerok/CollectionType";
 import NicknameBadge from "./NicknameBadge";
@@ -11,6 +11,9 @@ interface SaerokListCardProps {
   scale?: number;
   item: CollectionItem;
 }
+
+const DURATION = 0.45;
+const EASE = "power2.out";
 
 const SaerokListCard = ({ scale = 1, item }: SaerokListCardProps) => {
   const navigate = useNavigate();
@@ -39,9 +42,6 @@ const SaerokListCard = ({ scale = 1, item }: SaerokListCardProps) => {
 
     return () => ctx.revert();
   }, []);
-
-  const DURATION = 0.45;
-  const EASE = "power2.out";
 
   const handleEnter = () => {
     if (!frontRef.current || !backRef.current) return;

@@ -29,34 +29,30 @@ const NavBar = ({ scale = 1 }: NavBarProps) => {
       className="w-full bg-transparent h-60"
       style={{ height: `${60 * scale}px` }}
     >
-      <div className="w-full h-full ">
-        <ul role="navlist" className="w-full h-full flex ">
-          <ul className="w-full h-full flex flex-row items-start -space-x-20">
-            {NAV_ITEMS.slice(0, NAV_ITEMS.length - 1).map((item, index) => {
-              return (
-                <NavButton
-                  key={item.id}
-                  label={item.label}
-                  active={active === item.id}
-                  onClick={() => handleClick(item.id)}
-                  zIndex={NAV_ITEMS.length - index}
-                  className="-space-x-20"
-                  scale={scale}
-                />
-              );
-            })}
-          </ul>
-          <ul>
+      <div className="w-full h-full flex items-start justify-between">
+        <ul className=" h-full flex flex-row items-start -space-x-20 flex-none">
+          {NAV_ITEMS.slice(0, NAV_ITEMS.length - 1).map((item, index) => (
             <NavButton
-              label="ABOUT 새록"
-              active={active === "about"}
-              onClick={() => handleClick("about")}
-              zIndex={NAV_ITEMS.length}
-              className="space-x-20"
-              isAbout={true}
+              key={item.id}
+              label={item.label}
+              active={active === item.id}
+              onClick={() => handleClick(item.id)}
+              zIndex={NAV_ITEMS.length - index}
+              className="-space-x-20"
               scale={scale}
             />
-          </ul>
+          ))}
+        </ul>
+        <ul className="flex-none">
+          <NavButton
+            label="ABOUT 새록"
+            active={active === "about"}
+            onClick={() => handleClick("about")}
+            zIndex={NAV_ITEMS.length}
+            className="space-x-20"
+            isAbout={true}
+            scale={scale}
+          />
         </ul>
       </div>
     </nav>

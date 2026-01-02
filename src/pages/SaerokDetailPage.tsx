@@ -1,11 +1,11 @@
-import { useDesignScaleValue } from "@/design/DesignScaleContext";
+import { useResponsive } from "@/design/ResponsiveContext";
 import SaerokDetailCard from "@/features/saerok/detail/SaerokDetailCard";
 import SaerokDetailList from "@/features/saerok/detail/SaerokDetailList";
 import { useCollectionDetail } from "@/hooks/useCollectionDetail";
 import { useParams } from "react-router-dom";
 
 const SaerokDetailPage = () => {
-  const scale = useDesignScaleValue();
+  const { layout, scale } = useResponsive();
 
   const { id } = useParams<{ id: string }>();
   const { data, loading, error } = useCollectionDetail(Number(id));

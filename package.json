@@ -18,6 +18,7 @@
     "gsap": "^3.13.0",
     "leva": "^0.10.0",
     "maath": "^0.10.8",
+    "matter-js": "^0.20.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-responsive": "^10.0.1",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/matter-js": "^0.20.2",
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",

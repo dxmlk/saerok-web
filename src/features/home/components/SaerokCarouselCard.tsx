@@ -1,38 +1,51 @@
 import { ReactComponent as RectangleEdge } from "@/assets/images/edge.svg";
-import birdImage from "@/assets/images/BirdImg.png";
 import { scaledStyle } from "@/utils/scaleStyle";
+import type { CollectionItem } from "@/features/saerok/CollectionType";
+import { useNavigate } from "react-router-dom";
 
 interface SaerokCarouselCardProps {
   scale?: number;
+  item: CollectionItem;
 }
 
-const SaerokCarouselCard = ({ scale = 1 }: SaerokCarouselCardProps) => {
+const SaerokCarouselCard = ({ scale = 1, item }: SaerokCarouselCardProps) => {
+  const navigate = useNavigate();
   return (
     <div
-      className="slide shrink-0 w-343 h-455 flex justify-center items-center bg-background-lightWhitegray border-none rounded-20"
+      className="slide cursor-pointer shrink-0 w-343 h-455 flex justify-center items-center bg-background-lightWhitegray border-none rounded-20"
       style={scaledStyle(scale, {
         width: 343,
         height: 455,
         borderRadius: 20,
       })}
+      onClick={() => navigate(`/saerok/detail/${item.collectionId}`)}
     >
       <main
-        className="w-323 h-435 border-none rounded-10 bg-white"
-        style={scaledStyle(scale, { width: 323, height: 435 })}
+        className="w-323 h-435 border-none bg-white"
+        style={scaledStyle(scale, {
+          width: 323,
+          height: 435,
+          borderRadius: 16,
+        })}
       >
         <section
           className="w-full h-350 relative"
           style={scaledStyle(scale, { height: 350 })}
         >
           <img
-            className="absolute inset-0 w-full h-auto object-cover"
-            src={birdImage}
+            className="absolute inset-0 h-auto object-cover"
+            style={scaledStyle(scale, {
+              width: 322.8,
+              height: 350,
+              borderRadius: 10,
+            })}
+            src={item.imageUrl}
             alt="BirdImage"
           />
           <div className="absolute -bottom-6 left-0 flex -space-x-1 items-center">
             <div className="bg-background-white h-43 pl-12 pr-4 flex items-center">
               <span className="text-headline-2-2 font-moneygraphy text-black font-400">
-                검은댕기수리
+                {item.bird.koreanName}
               </span>
             </div>
             <RectangleEdge />
@@ -54,10 +67,10 @@ const SaerokCarouselCard = ({ scale = 1 }: SaerokCarouselCardProps) => {
             className="w-full flex flex-row justify-between mb-2"
             style={scaledStyle(scale, { marginBottom: 2 })}
           >
-            <span className="text-font-darkGray">21 February, 2025</span>
-            <span className="text-font-gray">SRK-X1C2A</span>
+            <span className="text-font-darkGray">{item.discoveredDate}</span>
+            <span className="text-font-gray">{item.user.nickname}</span>
           </div>
-          <span className="text-font-darkGray ">성북천 다리 아래에서</span>
+          <span className="text-font-darkGray ">{item.locationAlias}</span>
           <div
             className="text-mainBlue mt-18 space-x-3"
             style={scaledStyle(scale, { marginTop: 18 })}

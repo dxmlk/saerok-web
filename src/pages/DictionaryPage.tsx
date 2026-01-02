@@ -1,19 +1,22 @@
-import GlassBall from "@/components/GlassBall";
-
-import background from "@/assets/images/background.jpg";
 import { useDesignScaleValue } from "@/design/DesignScaleContext";
+import WordCloud from "../features/dictionary/components/WordCloud";
+import { useEffect } from "react";
 
 const DictionaryPage = () => {
   const scale = useDesignScaleValue();
 
+  useEffect(() => {
+    // 페이지 진입/새로고침 시 스크롤 최상단으로
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth", // 부드럽게 스크롤
+    });
+  }, []);
+
   return (
-    <div className="relative h-full w-full">
-      <img
-        className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-        src={background}
-        alt=""
-      />
-      <GlassBall />
+    <div className="w-full bg-background-lightWhitegray ">
+      <WordCloud scale={scale} />
     </div>
   );
 };

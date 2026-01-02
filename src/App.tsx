@@ -2,13 +2,16 @@ import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import { createRouter } from "./routes";
 import { DesignScaleProvider } from "./design/DesignScaleContext";
+import { ResponsiveProvider } from "./design/ResponsiveContext";
 
 function App() {
   const router = createRouter();
   return (
-    <DesignScaleProvider>
-      <RouterProvider router={router} />
-    </DesignScaleProvider>
+    <ResponsiveProvider>
+      <DesignScaleProvider>
+        <RouterProvider router={router} />
+      </DesignScaleProvider>
+    </ResponsiveProvider>
   );
 }
 

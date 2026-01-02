@@ -1,11 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { gsap } from "gsap";
 
 interface RollingTextProps {
   startAnimation?: boolean;
-  values: string[]; // 8개 텍스트
+  values: string[];
   startIndex: number; // 랜덤 시작점
   scale: number;
+  onSelect?: (value: string) => void;
 }
 
 const RollingText: React.FC<RollingTextProps> = ({
@@ -13,11 +14,23 @@ const RollingText: React.FC<RollingTextProps> = ({
   values,
   startIndex,
   scale = 1,
+  onSelect,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const itemWidth = 100 * scale; // 각 아이템 너비
   const itemHeight = 50 * scale; // 각 아이템 높이
   const fontSize = 50 * scale; // 폰트 크기
-  let currentY = 0;
+  const currentYRef = useRef(0);
+
+  // startIndex 기준으로 8개만 순회
+  const visibleValues = useMemo(
+    () =>
+      Array.from(
+        { length: 8 },
+        (_, i) => values[(startIndex + i) % values.length]
+      ),
+    [values, startIndex]
+  );
 
   useEffect(() => {
     if (!startAnimation || !containerRef.current) return;
@@ -26,11 +39,12 @@ const RollingText: React.FC<RollingTextProps> = ({
     let speed = 40; // 초기 빠른 속도
 
     const interval = setInterval(() => {
-      currentY += itemHeight;
-      if (currentY > itemHeight * (totalItems - 1)) currentY = 0;
+      currentYRef.current += itemHeight;
+      if (currentYRef.current > itemHeight * (totalItems - 1))
+        currentYRef.current = 0;
 
       gsap.to(containerRef.current, {
-        y: -currentY,
+        y: -currentYRef.current,
         duration: speed / 1000,
         ease: "none",
       });
@@ -41,29 +55,32 @@ const RollingText: React.FC<RollingTextProps> = ({
     // 0.6초 후 멈춤: 마지막 텍스트 고정
     const stopTimer = setTimeout(() => {
       clearInterval(interval);
+
+      const finalIndex = totalItems - 1;
+      const finalY = itemHeight * finalIndex;
+
       gsap.to(containerRef.current, {
         y: -itemHeight * (totalItems - 1), // 마지막 텍스트 위치
         duration: 0.3,
         ease: "power2.out",
       });
+
+      const finalValue = visibleValues[finalIndex];
+      if (onSelect) {
+        onSelect(finalValue); // 상위로 선택된 텍스트 전달
+      }
     }, 600);
 
     return () => {
       clearInterval(interval);
       clearTimeout(stopTimer);
     };
-  }, [startAnimation, values, startIndex]);
-
-  // startIndex 기준으로 8개만 순회
-  const visibleValues = Array.from(
-    { length: 8 },
-    (_, i) => values[(startIndex + i) % values.length]
-  );
+  }, [startAnimation, values, startIndex, onSelect]);
 
   return (
     <div
       style={{
-        width: "100px",
+        width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         overflow: "hidden",
         display: "inline-block",
@@ -82,6 +99,8 @@ const RollingText: React.FC<RollingTextProps> = ({
               fontWeight: 700,
               letterSpacing: "-0.08em",
               color: "black",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
             }}
           >
             {value}

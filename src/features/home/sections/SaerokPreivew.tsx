@@ -18,6 +18,8 @@ const SaerokPreview = ({ scale = 1 }: SaerokPreivewProps) => {
   const [startRolling, setStartRolling] = useState(false);
   const [startIndex] = useState(Math.floor(Math.random() * REGION.length));
 
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+
   useEffect(() => {
     setStartRolling(true);
   }, []);
@@ -44,6 +46,9 @@ const SaerokPreview = ({ scale = 1 }: SaerokPreivewProps) => {
             values={REGION}
             startIndex={startIndex}
             scale={scale}
+            onSelect={(value) => {
+              setSelectedRegion(value);
+            }}
           />
           <span>]에는</span>
         </div>
@@ -57,7 +62,7 @@ const SaerokPreview = ({ scale = 1 }: SaerokPreivewProps) => {
           marginBottom: 25,
         })}
       >
-        <RoundButton text="새록 더 보러가기" moveTo="explore" scale={scale} />
+        <RoundButton text="새록 더 보러가기" moveTo="saerok" scale={scale} />
       </div>
 
       <div
@@ -66,7 +71,7 @@ const SaerokPreview = ({ scale = 1 }: SaerokPreivewProps) => {
           marginBottom: 87,
         })}
       >
-        <SaerokCarousel scale={scale} />
+        <SaerokCarousel scale={scale} region={selectedRegion} />
       </div>
     </main>
   );

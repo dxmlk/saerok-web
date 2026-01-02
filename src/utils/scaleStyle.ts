@@ -24,6 +24,7 @@ type ScaledProps = Partial<
     | "height"
     | "letterSpacing"
     | "borderWidth"
+    | "maxWidth"
   >
 >;
 

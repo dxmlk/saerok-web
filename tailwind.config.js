@@ -37,6 +37,7 @@ const EXTRA = {
   60: pxToRem(60),
   65: pxToRem(65),
   67: pxToRem(67),
+  74: pxToRem(74),
   78: pxToRem(78),
   79: pxToRem(79),
   85: pxToRem(85),
@@ -71,6 +72,15 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      animation: {
+        blink: "blink 1s linear infinite",
+      },
+      keyframes: {
+        blink: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.4" },
+        },
+      },
       spacing: REM_ENTRIES,
       width: REM_ENTRIES,
       height: { "100dvh": "100dvh", ...REM_ENTRIES },

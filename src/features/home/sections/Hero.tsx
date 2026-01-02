@@ -2,7 +2,6 @@
 import type { HTMLAttributes } from "react";
 import useSpotlightEffect from "@/hooks/useSpotlightEffect";
 import background from "@/assets/images/background.jpg";
-import GlassBall from "@/components/GlassBall";
 
 interface SpotlightConfig {
   spotlightSize?: number; // px
@@ -68,10 +67,6 @@ const Hero = ({
           bottom: `${49 * scale}px`,
         }}
       >
-        <div className="absolute inset-0" style={{ opacity: 0.7 }}>
-          <GlassBall height="100%" />
-        </div>
-
         <div
           className="relative z-10 text-center whitespace-pre-line text-white font-400 pointer-events-none"
           style={{

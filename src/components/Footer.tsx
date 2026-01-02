@@ -1,12 +1,14 @@
+import type { LayoutType } from "@/design/ResponsiveContext";
 import AppInstallButton from "./AppInstallButton";
 import { ReactComponent as InstagramIcon } from "@/assets/icons/instagram.svg";
 
 interface FooterProps {
-  isMobile?: boolean;
+  layout?: LayoutType;
   scale?: number;
 }
 
-const Footer = ({ isMobile, scale = 1 }: FooterProps) => {
+const Footer = ({ layout, scale = 1 }: FooterProps) => {
+  const isMobile = layout === "mobile" || layout === "tablet";
   return (
     <footer
       className="w-full bg-font-gray px-120 py-46 flex flex-col justify-start text-background-white text-body-1 font-400 "
