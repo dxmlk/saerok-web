@@ -7,6 +7,8 @@ import { ReactComponent as DateIcon } from "@/assets/icons/date.svg";
 import { useNavigate } from "react-router-dom";
 import { scaledStyle } from "@/utils/scaleStyle";
 
+gsap.registerPlugin();
+
 interface SaerokListCardProps {
   scale?: number;
   item: CollectionItem;
@@ -36,7 +38,7 @@ const SaerokListCard = ({ scale = 1, item }: SaerokListCardProps) => {
         willChange: "opacity, transform",
         scale: 1,
       });
-      gsap.set(frontRef.current!, { opcaity: 1 });
+      gsap.set(frontRef.current!, { opacity: 1 });
       gsap.set(backRef.current!, { opacity: 0 });
     }, wrapRef);
 
@@ -69,7 +71,7 @@ const SaerokListCard = ({ scale = 1, item }: SaerokListCardProps) => {
   return (
     <div
       ref={wrapRef}
-      className="group relative w-full h-auto overflow-visible break-inside-avoid z-20"
+      className="group cursor-pointer relative w-full h-auto overflow-visible break-inside-avoid z-20"
       style={scaledStyle(scale, {
         borderRadius: 20,
         marginBottom: 20,

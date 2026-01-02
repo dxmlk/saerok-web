@@ -1,13 +1,21 @@
 import { scaledStyle } from "@/utils/scaleStyle";
+import type { CollectionItem } from "../CollectionType";
+import { useNavigate } from "react-router-dom";
 
 interface SaerokDetailListCardProps {
+  item: CollectionItem;
   scale?: number;
 }
 
-const SaerokDetailListCard = ({ scale = 1 }: SaerokDetailListCardProps) => {
+const SaerokDetailListCard = ({
+  item,
+  scale = 1,
+}: SaerokDetailListCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <div
-      className="flex flex-row items-center justify-start bg-background-white shirnk-0"
+      className="cursor-pointer flex flex-row items-center justify-start bg-background-white shirnk-0"
       style={scaledStyle(scale, {
         width: 409,
         height: 164,
@@ -17,10 +25,11 @@ const SaerokDetailListCard = ({ scale = 1 }: SaerokDetailListCardProps) => {
         gap: 13,
         borderRadius: 20,
       })}
+      onClick={() => navigate(`/saerok/detail/${item.collectionId}`)}
     >
       {/* 이미지 섹션  */}
       <img
-        src="src/assets/images/BirdImg.png"
+        src={item.imageUrl}
         className="object-cover overflow-hidden flex justify-center items-center"
         style={scaledStyle(scale, {
           width: 150,
@@ -46,7 +55,7 @@ const SaerokDetailListCard = ({ scale = 1 }: SaerokDetailListCardProps) => {
               letterSpacing: -1.6,
             })}
           >
-            긴꼬리딱새
+            {item.bird.koreanName}
           </div>
           <div
             className="text-font-gray font-400"
@@ -56,7 +65,7 @@ const SaerokDetailListCard = ({ scale = 1 }: SaerokDetailListCardProps) => {
               letterSpacing: -1.28,
             })}
           >
-            파란색 새 꼬리가 무지 길다!
+            {item.note}
           </div>
         </div>
         {/* 유저 정보 */}
@@ -66,7 +75,7 @@ const SaerokDetailListCard = ({ scale = 1 }: SaerokDetailListCardProps) => {
         >
           {/* 유저 이미지 */}
           <img
-            src="src/assets/images/BirdImg.png"
+            src={item.user.thumbnailProfileImageUrl}
             className="overflow-hidden rounded-full flex justify-center object-cover items-center border border-background-lightWhitegray"
             style={scaledStyle(scale, { width: 25, height: 25 })}
           />
@@ -75,7 +84,7 @@ const SaerokDetailListCard = ({ scale = 1 }: SaerokDetailListCardProps) => {
             className="text-font-black font-400"
             style={scaledStyle(scale, { fontSize: 15, lineHeight: 20 })}
           >
-            금강산새록전문가
+            {item.user.nickname}
           </div>
         </div>
       </div>

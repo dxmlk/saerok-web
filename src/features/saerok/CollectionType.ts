@@ -8,10 +8,12 @@ export interface User {
   userId: number;
   nickname: string;
   profileImageUrl: string;
+  thumbnailProfileImageUrl: string;
 }
 
 export interface CollectionItem {
   collectionId: number;
+  createdAt: string;
   imageUrl: string;
   discoveredDate: string;
   latitude: number;

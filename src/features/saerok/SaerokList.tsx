@@ -2,17 +2,13 @@ import { useCuratedCollections } from "@/hooks/useCuratedSaeroks";
 import SaerokListCard from "./SaerokListCard";
 import { scaledStyle } from "@/utils/scaleStyle";
 import SaerokListSkeleton from "../home/components/SaerokListSkeleton";
+import { curatedIds } from "@/constants/curatedIds";
 
 interface SaerokListProps {
   scale?: number;
 }
 
 const SaerokList = ({ scale = 1 }: SaerokListProps) => {
-  const curatedIds = [
-    1272, 704, 1275, 691, 1522, 486, 464, 692, 1266, 1270, 484, 465, 1105, 516,
-    1010, 1276,
-  ];
-
   const { data, loading, error } = useCuratedCollections(curatedIds);
 
   if (loading) {

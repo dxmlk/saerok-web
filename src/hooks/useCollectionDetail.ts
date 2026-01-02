@@ -15,7 +15,7 @@ export const useCollectionDetail = (id?: number) => {
       .then(setData)
       .catch((e) => {
         if (
-          (e as any)?.name !== "CancledError" &&
+          (e as any)?.name !== "CanceledError" &&
           (e as any)?.name !== "AbortError"
         ) {
           setError(e);
