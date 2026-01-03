@@ -1,81 +1,56 @@
-"use client";
-import type { HTMLAttributes } from "react";
-import useSpotlightEffect from "@/hooks/useSpotlightEffect";
-import background from "@/assets/images/background.jpg";
+import { ReactComponent as WebMain } from "@/assets/images/web-main.svg";
+import { scaledStyle } from "@/utils/scaleStyle";
+import BackgroundCarousel from "../components/BackgroundCarousel";
 
-interface SpotlightConfig {
-  spotlightSize?: number; // px
-  spotlightIntensity?: number; // 0~1
-  fadeSpeed?: number; // 0~1 (작을수록 더 부드럽게)
-  glowColor?: string; // "#ffffff" 또는 "255,255,255" 모두 허용
-  pulseSpeed?: number; // ms (0 또는 undefined면 비활성)
-}
-
-interface HeroProps extends HTMLAttributes<HTMLDivElement> {
+interface HeroProps {
   scale?: number;
-  config?: SpotlightConfig;
 }
 
-const Hero = ({
-  scale = 1,
-  config = {},
-  className = "",
-  ...divProps
-}: HeroProps) => {
-  const spotlightConfig: SpotlightConfig = {
-    spotlightSize: 200,
-    spotlightIntensity: 0.85,
-    fadeSpeed: 1,
-    glowColor: "#ffffff", // 원본처럼 glowColor 유지
-    pulseSpeed: 0, // 필요시 2000 등으로 설정
-    ...config,
-  };
-
-  // 캔버스 ref만 반환 (ref는 반드시 <canvas>에!)
-  const canvasRef = useSpotlightEffect(spotlightConfig);
-
+const Hero = ({ scale = 1 }: HeroProps) => {
   return (
     <main
-      className={`relative w-full bg-mainBlue overflow-hidden ${className}`}
-      style={{
-        height: `${812 * scale}px`,
-        paddingLeft: `${120 * scale}px`,
-        paddingRight: `${120 * scale}px`,
-      }}
-      {...divProps}
+      className="bg-mainBlue w-full flex flex-row items-center overflow-hidden"
+      style={scaledStyle(scale, { height: 812 })}
     >
-      {/* 배경 이미지 */}
-      <img
-        className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-        src={background}
-        alt=""
+      <WebMain
+        className="shrink-0"
+        style={scaledStyle(scale, {
+          width: 581.79,
+          height: 1010,
+          marginTop: 20,
+        })}
       />
-
-      {/* 오버레이 캔버스 — 반드시 여기(ref는 canvas에) */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full block"
-      />
-
-      {/* 우측 하단 안내 */}
-      <div
-        className="absolute flex items-center justify-center "
-        style={{
-          width: `${180 * scale}px`,
-          height: `${180 * scale}px`,
-          right: `${60 * scale}px`,
-          bottom: `${49 * scale}px`,
-        }}
-      >
+      <div className="relative h-full w-full">
         <div
-          className="relative z-10 text-center whitespace-pre-line text-white font-400 pointer-events-none"
+          className="absolute z-50"
           style={{
-            fontSize: `${20 * scale}px`,
-            lineHeight: `${20 * scale}px`,
-            letterSpacing: `${-1 * scale}px`,
+            ...scaledStyle(scale, {
+              width: 181.21,
+              height: 1010,
+              left: -1,
+              top: 0,
+            }),
+            background:
+              "linear-gradient(90deg, #4190FF 0%, rgba(65, 144, 255, 0) 100%)",
+          }}
+        />
+        <div
+          className="flex flex-col items-center absolute "
+          style={{
+            ...scaledStyle(scale, {
+              top: 0,
+              left: 0,
+              paddingTop: 77,
+              paddingBottom: 77,
+              gap: 20.97,
+            }),
+            opacity: 0.2,
           }}
         >
-          {`망원경을 옮겨서 숨은\n새들을 찾아보세요!`}
+          <BackgroundCarousel scale={scale} direction="left" speed={70} />
+          <BackgroundCarousel scale={scale} direction="right" speed={70} />
+
+          {/* <BackgroundCarousel scale={scale} /> */}
         </div>
       </div>
     </main>

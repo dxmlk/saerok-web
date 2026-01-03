@@ -37,7 +37,7 @@ const SaerokCarouselCard = ({ scale = 1, item }: SaerokCarouselCardProps) => {
             style={scaledStyle(scale, {
               width: 322.8,
               height: 350,
-              borderRadius: 10,
+              borderRadius: "10px 10px 0 0 ",
             })}
             src={item.imageUrl}
             alt="BirdImage"

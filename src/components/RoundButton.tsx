@@ -3,18 +3,28 @@ import { useNavigate } from "react-router-dom";
 
 interface RoundButtonProps {
   text: string;
-  moveTo: string;
+  moveTo?: string;
+  href?: string;
   scale?: number;
 }
 
-const RoundButton = ({ text, moveTo, scale = 1 }: RoundButtonProps) => {
+const RoundButton = ({ text, moveTo, href, scale = 1 }: RoundButtonProps) => {
   const navigate = useNavigate();
   const itemHeight = 49 * scale;
   const fontSize = 20 * scale;
 
+  const handleClick = () => {
+    if (href) window.open(href, "_blank", "noopener,noreferrer");
+
+    if (moveTo) {
+      const path = moveTo.startsWith("/") ? moveTo : `/${moveTo}`;
+      navigate(path);
+    }
+  };
+
   return (
     <button
-      onClick={() => navigate(`/${moveTo}`)}
+      onClick={handleClick}
       className="flex flex-row justify-between items-center pl-20 pr-15 h-49 rounded-30 gap-8 border-1 border-mainBlue bg-background-white"
       style={{
         height: `${itemHeight}px`,

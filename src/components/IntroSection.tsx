@@ -74,7 +74,11 @@ const IntroSection = ({
       >
         <img src={qrCode} alt="QR Code" className="h-full" />
         {/* 이거 moveTo 수정해야 됨 */}
-        <RoundButton text="앱 다운 받기" moveTo="home" scale={scale} />
+        <RoundButton
+          text="앱 다운 받기"
+          href="https://apps.apple.com/kr/app/%EC%83%88%EB%A1%9D-%EC%9D%BC%EC%83%81-%EC%86%8D%EC%9D%98-%ED%83%90%EC%A1%B0-%EC%9D%BC%EC%A7%80/id6744866662"
+          scale={scale}
+        />
       </div>
     </div>
   );
