@@ -1,14 +1,13 @@
-// components/WordCloud/WordItem.tsx
 import React, { useMemo } from "react";
 import { WORDS, type DictionaryItem } from "@/constants/words";
 
 interface WordItemProps {
   word: string;
-  meaning: string;
   index: number;
+  onClick?: (word: string) => void;
 }
 
-const WordItem: React.FC<WordItemProps> = ({ word, meaning, index }) => {
+const WordItem: React.FC<WordItemProps> = ({ word, index, onClick }) => {
   const style = useMemo(() => {
     const config: DictionaryItem | undefined = WORDS.find(
       (w) => w.word === word
@@ -22,6 +21,7 @@ const WordItem: React.FC<WordItemProps> = ({ word, meaning, index }) => {
         transform: "translate(-50%, -50%)",
         fontSize: 48,
         pointerEvents: "auto",
+        zIndex: 10 + index,
       } as React.CSSProperties;
     }
 
@@ -40,18 +40,27 @@ const WordItem: React.FC<WordItemProps> = ({ word, meaning, index }) => {
     } as React.CSSProperties;
   }, [word, index]);
 
-  const isCenterWord = WORDS.find((w) => w.word === word)?.center ?? false;
-
-  const baseClassName = isCenterWord
-    ? "word word-center absolute select-none font-700 text-background-white"
-    : "word absolute select-none font-400 text-background-white";
-
-  // ⬅ hover 시 빠른 깜빡임
-  const className = `${baseClassName} hover:animate-blink-fast cursor-pointer`;
+  const baseFontSize = WORDS.find((w) => w.word === word)?.fontSize ?? 56;
 
   return (
-    <div className={className} style={style} data-index={index}>
-      {word}
+    <div
+      className={[
+        "word absolute select-none cursor-pointer",
+        "font-400 text-background-white",
+      ].join(" ")}
+      style={style}
+      data-index={index}
+      data-word={word}
+      data-base-fontsize={baseFontSize}
+      onClick={() => onClick?.(word)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClick?.(word);
+      }}
+    >
+      {/*  scale/glow는 이 span에만 적용됨 */}
+      <span className="word-label inline-block origin-center">{word}</span>
     </div>
   );
 };
